@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const BlogCard = () => {
+const BlogCard = ({title,writer, description, _id,  createdAt}) => {
   return (
     <div className="  border border-gray-200 rounded-lg shadow-md flex flex-col items-center justify-between gap-2 p-3 hover:bg-[#f6f9ff] transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
       <Image
@@ -13,20 +13,16 @@ const BlogCard = () => {
         className="rounded-2xl w-full h-auto"
       />
       <Link
-        href={"#"}
+        href={`/blogs/${_id}`}
         className={
           "text-[#05264e] mt-3 hover:text-[#3c65f5] font-bold text-lg text-start "
         }
       >
-        How to write different Application Letter with Examples
+       {title}
       </Link>
 
-      <p className="hover:text-[#3c65f5] text-[#4f5e64] pb-4 text-start">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere
-        perferendis laborum consequuntur delectus! Molestiae odit error velit
-        voluptatum et debitis harum officiis. Ea aliquam consequatur nisi cum
-        accusantium architecto cupiditate?{" "}
+      <p className=" text-[#4f5e64] pb-4 text-start">
+        {description}
       </p>
       <div className="flex items-center justify-between w-full px-2 pb-5 text-sm text-[#6c757d]">
         {/* Left Side - Avatar and Text */}
@@ -40,8 +36,8 @@ const BlogCard = () => {
             />
           </div>
           <div className="flex flex-col justify-center items-center">
-            <span className="text-[#05264e] font-semibold">jobbox</span>
-            <span className="text-xs text-[#6c757d]">June 4, 2022</span>
+            <span className="text-[#05264e] font-semibold">{writer || "Anonymous"}</span>
+            <span className="text-xs text-[#6c757d]">{new Date(createdAt).toLocaleDateString()}</span>
           </div>
         </div>
 

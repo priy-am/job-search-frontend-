@@ -2,18 +2,32 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
-import { Button } from "./ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { toast, ToastContainer } from "react-toastify";
-
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchUserStart,
+  fetchUserSuccess,
+  logoutUser,
+  fetchUserFailure,
+} from "@/redux/userSlice";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const [blogOpen, setBlogOpen] = useState(false);
+  const [isBlogMobileOpen, setIsBlogMobileOpen] = useState(false)
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        dispatch(fetchUserStart());
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_AUTH_END_POINT}/me`,
           {
@@ -24,37 +38,39 @@ const Header = () => {
         if (res.ok) {
           const data = await res.json();
           console.log(data.user);
-          setUser(data.user);
+          dispatch(fetchUserSuccess(data.user));
         }
       } catch (error) {
         console.error("Error fetching user: ", error);
+        dispatch(fetchUserFailure(error.message));
       }
     };
     fetchUser();
-  }, []);
+  }, [dispatch]);
 
   const Logout = async () => {
     try {
-       const res = await fetch(
-      `${process.env.NEXT_PUBLIC_AUTH_END_POINT}/logout`,
-      {
-        method: "POST", // Usually logout should be POST
-        credentials: "include", // Include cookies for logout
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_AUTH_END_POINT}/logout`,
+        {
+          method: "POST", // Usually logout should be POST
+          credentials: "include", // Include cookies for logout
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(data.message);
+        dispatch(logoutUser());
+
+        // Refresh the page after successful logout
+        setTimeout(() => {
+          router.refresh();
+        }, 1000); // Small delay to show the success message
+      } else {
+        const errorData = await res.json();
+        toast.error(errorData.message || "Logout failed");
       }
-    );
-    
-    if (res.ok) {
-      const data = await res.json();
-      toast.success(data.message);
-      
-      // Refresh the page after successful logout
-      setTimeout(() => {
-        router.refresh();
-      }, 1000); // Small delay to show the success message
-    } else {
-      const errorData = await res.json();
-      toast.error(errorData.message || "Logout failed");
-    }
     } catch (error) {
       console.error(error);
     }
@@ -79,7 +95,7 @@ const Header = () => {
               <Link href="/">Home</Link>
             </div>
             <div className="group relative hover:underline-offset-4 transition hover:text-[#3c65f5] hover:underline">
-              <Link href="#">Find a Job</Link>
+              <Link href="/allJob">Find a Job</Link>
             </div>
             <div className="group relative hover:underline-offset-4 transition hover:text-[#3c65f5] hover:underline">
               <Link href="#">Recruiters</Link>
@@ -87,9 +103,40 @@ const Header = () => {
             <div className="group relative hover:underline-offset-4 transition hover:text-[#3c65f5] hover:underline">
               <Link href="#">Candidates</Link>
             </div>
-            <div className="group relative hover:underline-offset-4 transition hover:text-[#3c65f5] hover:underline">
-              <Link href="#">Blog</Link>
-            </div>
+
+            <Popover open={blogOpen} onOpenChange={setBlogOpen}>
+              <PopoverTrigger
+                onMouseEnter={() => setBlogOpen(true)}
+                onMouseLeave={() => setBlogOpen(false)}
+                className="flex items-center text-gray-700 font-medium hover:text-[#3c65f5] hover:underline hover:underline-offset-4 focus:outline-none cursor-pointer"
+              >
+                <span>Blog</span>
+                <ChevronDown size={16} className="ml-1 text-gray-400" />
+              </PopoverTrigger>
+
+              <PopoverContent
+                onMouseEnter={() => setBlogOpen(true)}
+                onMouseLeave={() => setBlogOpen(false)}
+                className="w-[180px] p-2"
+              >
+                <Link
+                  href="/blogs"
+                  className="block p-2 rounded hover:bg-gray-100 text-sm cursor-pointer"
+                >
+                  All Blogs
+                </Link>
+
+                {user?.userType === "recruiter" && (
+                  <Link
+                    href="/blogs/blogPost"
+                    className="block p-2 rounded hover:bg-gray-100 text-sm cursor-pointer"
+                  >
+                    Blog Post
+                  </Link>
+                )}
+              </PopoverContent>
+            </Popover>
+
             <div className="group relative hover:underline-offset-4 transition hover:text-[#3c65f5] hover:underline">
               <Link href="#">Pages</Link>
             </div>
@@ -99,11 +146,10 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-5">
             {!user ? (
               <>
-                <Link
-                  href="/auth/register"
-                  className="text-[#05264e] hover:text-[#3c65f5] font-semibold underline hover:underline-offset-4 transition"
-                >
-                  Register
+                <Link href="/auth/register">
+                  <button className="bg-[#3c65f5] text-white px-5 py-2 rounded-md hover:bg-[#05264e] transition">
+                    Register
+                  </button>
                 </Link>
 
                 <Link href="/auth/login">
@@ -138,13 +184,6 @@ const Header = () => {
                 </button>
               </Link>
             )}
-
-            <button className="flex gap-1.5 items-center justify-center bg-[#3c65f5] text-white px-5 py-2 rounded-md hover:bg-[#05264e] transition">
-              <span>
-                <Search className="text-white w-4 h-4" />
-              </span>
-              <span> Search </span>
-            </button>
           </div>
 
           {/* Mobile menu toggle */}
@@ -161,7 +200,7 @@ const Header = () => {
             <Link href="/" className="block">
               Home
             </Link>
-            <Link href="#" className="block">
+            <Link href="/allJob" className="block">
               Find a Job
             </Link>
             <Link href="#" className="block">
@@ -170,9 +209,31 @@ const Header = () => {
             <Link href="#" className="block">
               Candidates
             </Link>
-            <Link href="#" className="block">
-              Blog
-            </Link>
+            <div>
+  <button
+    className="flex justify-between items-center w-full text-left text-gray-700 py-2"
+    onClick={() => setIsBlogMobileOpen((prev) => !prev)}
+  >
+    <span>Blog</span>
+    {isBlogMobileOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+  </button>
+
+  {isBlogMobileOpen && (
+    <div className="ml-4 space-y-2">
+      <Link href="/blogs" className="block text-sm text-gray-600">
+        All Blogs
+      </Link>
+
+      {user?.userType === "recruiter" && (
+        <Link href="/blogs/blogPost" className="block text-sm text-gray-600">
+          Blog Post
+        </Link>
+      )}
+    </div>
+  )}
+</div>
+
+
             <Link href="#" className="block">
               Pages
             </Link>
@@ -180,8 +241,10 @@ const Header = () => {
 
             {!user ? (
               <>
-                <Link href="/auth/register" className="block text-[#3c65f5]">
-                  Register
+                <Link href="/auth/register">
+                  <button className="w-full bg-[#3c65f5] text-white py-2 rounded-md">
+                    Register
+                  </button>
                 </Link>
 
                 <Link href="/auth/login">
@@ -190,18 +253,18 @@ const Header = () => {
                   </button>
                 </Link>
               </>
-            ): (
-              <div
+            ) : (
+              <button
                 onClick={() => Logout()}
-                className="text-[#05264e] cursor-pointer hover:text-[#3c65f5] font-semibold underline hover:underline-offset-4 transition"
+                className="w-full bg-[#3c65f5] text-white py-2 rounded-md"
               >
                 Logout
-              </div>
+              </button>
             )}
 
             {user && user.userType === "recruiter" && (
               <Link href="/jobpost">
-                <button className="bg-[#3c65f5] text-white px-5 py-2 rounded-md hover:bg-[#05264e] transition">
+                <button className="bg-[#3c65f5] w-full text-white px-5 py-2 rounded-md hover:bg-[#05264e] transition">
                   Post a Job
                 </button>
               </Link>
@@ -209,18 +272,11 @@ const Header = () => {
 
             {user && user.userType === "jobseeker" && (
               <Link href="/dashboard">
-                <button className="bg-[#3c65f5] text-white px-5 py-2 rounded-md hover:bg-[#05264e] transition">
+                <button className="bg-[#3c65f5] w-full text-white px-5 py-2 rounded-md hover:bg-[#05264e] transition">
                   Dashboard
                 </button>
               </Link>
             )}
-
-            <button className="flex w-full gap-2 items-center justify-center bg-[#3c65f5] text-white px-5 py-2 rounded-md ">
-              <span>
-                <Search className="text-white w-4 h-4" />
-              </span>
-              <span> Search </span>
-            </button>
           </div>
         )}
       </header>

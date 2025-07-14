@@ -75,7 +75,7 @@ export default function ApplyJobPage() {
 
     console.log(data.resume[0]);
     try {
-      const res = await fetch("http://localhost:3000/api/application/submit", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/submit`, {
         method: "POST",
         // Remove Content-Type header - let browser set it automatically for FormData
         credentials: "include",
@@ -99,7 +99,7 @@ export default function ApplyJobPage() {
   return (
     <>
       <ToastContainer />
-      <div className="max-w-2xl mx-auto mt-10 px-4">
+      <div className="max-w-2xl mx-auto my-10  px-4">
         {loading ? (
           <div className="text-center">
             <div className="animate-pulse">

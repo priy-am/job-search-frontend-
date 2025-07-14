@@ -184,23 +184,6 @@ export default function JobPostForm() {
               <p className="text-red-500 text-sm">{errors.duration.message}</p>
             )}
 
-            {/* <Input
-              type="text"
-              {...register("duration", {
-                required: "Duration is required",
-                validate: (value) => {
-                  const trimmed = value.trim();
-                  if (trimmed.length < 3) {
-                    return "Duration must be at least 3 characters";
-                  }
-                  return true;
-                },
-              })}
-              placeholder="e.g.  6 months"
-            />
-            {errors.duration && (
-              <p className="text-red-500 text-sm">{errors.duration.message}</p>
-            )} */}
           </div>
 
           <div className="space-y-2 w-full md:w-1/2">

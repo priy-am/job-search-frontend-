@@ -14,7 +14,6 @@ export default function Home() {
       <JobsOfDay/>
       <NewsAndBlogs/>
       <SubscribeSection/>
-      <Footer/>
     </div>
   );
 }

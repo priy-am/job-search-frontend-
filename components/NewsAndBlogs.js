@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import {
   Carousel,
@@ -7,8 +8,26 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import BlogCard from "./BlogCard";
+import { useState, useEffect } from "react";
 
 const NewsAndBlogs = () => {
+
+    const [blogs, setBlogs] = useState([]);
+  
+    useEffect(() => {
+      const fetchBlogs = async () => {
+        try {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/blogs/allBlogs`);
+          const data = await res.json();
+          setBlogs(data?.blogs || []);
+        } catch (error) {
+          console.error("Failed to fetch blogs", error);
+        }
+      };
+  
+      fetchBlogs();
+    }, []);
+
   return (
     <div className="container mx-auto px-6 py-12 space-y-4 text-center">
       <h3 className="text-[#05264e] text-4xl font-bold">News and Blog</h3>
@@ -26,13 +45,13 @@ const NewsAndBlogs = () => {
             }}
           >
             <CarouselContent className="-ml-2 md:-ml-4 mt-8 h-full ">
-              {[...Array(9)].map((category, index) => (
+              {blogs.map((blog, index) => (
                 <CarouselItem 
                   key={index} 
                   className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3 min-w-0"
                 >
                   <div className="h-full">
-                    <BlogCard/>
+                    <BlogCard {...blog} />
                   </div>
                 </CarouselItem>
               ))}

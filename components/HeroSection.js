@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import SearchBar from "./SearchBar";
 
 const HeroSection = () => {
   return (
@@ -12,6 +13,10 @@ const HeroSection = () => {
           Each month, more than 3 million job seekers turn to website in their
           search for work, making over 140,000 applications every single day
         </p>
+
+        <div className="mt-9 mx-auto">
+          <SearchBar/>
+        </div>
       </div>
       
        <div className="right hidden  w-full lg:w-1/2 md:flex items-center justify-center  min-h-[40vh] lg:min-h-[80vh] p-4 lg:p-8 overflow-hidden">
