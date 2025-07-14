@@ -2,7 +2,7 @@
 import { Home } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import BlogCard from "@/components/BlogCard"; // adjust path if needed
+import BlogCard from "@/components/BlogCard"; 
 import SubscribeSection from "@/components/SubscribeSection";
 
 const BlogPage = () => {

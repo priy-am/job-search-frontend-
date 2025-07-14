@@ -46,7 +46,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between bg-white rounded-xl px-4 md:px-6 py-5 shadow-md gap-4 max-w-4xl mx-auto w-full">
+    <div className="flex flex-col md:flex-row items-stretch md:items-center justify-start bg-white rounded-xl px-4 md:px-6  py-5 shadow-md gap-4 max-w-[44rem] mx-auto w-full">
       {/* Industry Dropdown */}
       <Popover open={industryOpen} onOpenChange={setIndustryOpen}>
         <PopoverTrigger
