@@ -16,6 +16,7 @@ import {
 
 import { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
 
 export default function JobPostForm() {
   const {
@@ -28,6 +29,7 @@ export default function JobPostForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [categories, setCategories] = useState([]);
+    const user = useSelector((state) => state.user.user);
 
   const categoryId = watch("categoryId");
   const selectedCategory = categories.find((cat) => cat._id === categoryId);
@@ -60,7 +62,7 @@ export default function JobPostForm() {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ ...data, skills: skillArray }),
+          body: JSON.stringify({ ...data, skills: skillArray, recruiterId: user._id }),
         }
       );
 

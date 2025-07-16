@@ -16,13 +16,18 @@ import {
   logoutUser,
   fetchUserFailure,
 } from "@/redux/userSlice";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
+  const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
   const [blogOpen, setBlogOpen] = useState(false);
-  const [isBlogMobileOpen, setIsBlogMobileOpen] = useState(false)
-  const dispatch = useDispatch();
+  const [isBlogMobileOpen, setIsBlogMobileOpen] = useState(false);
+  const [pagesOpen, setPagesOpen] = useState(false);
+  const [isPagesMobileOpen, setIsPagesMobileOpen] = useState(false);
+
   const user = useSelector((state) => state.user.user);
+  const router = useRouter()
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -65,6 +70,7 @@ const Header = () => {
 
         // Refresh the page after successful logout
         setTimeout(() => {
+          router.push('/')
           router.refresh();
         }, 1000); // Small delay to show the success message
       } else {
@@ -137,9 +143,31 @@ const Header = () => {
               </PopoverContent>
             </Popover>
 
-            <div className="group relative hover:underline-offset-4 transition hover:text-[#3c65f5] hover:underline">
-              <Link href="#">Pages</Link>
-            </div>
+            <Popover open={pagesOpen} onOpenChange={setPagesOpen}>
+              <PopoverTrigger
+                onMouseEnter={() => setPagesOpen(true)}
+                onMouseLeave={() => setPagesOpen(false)}
+                className="group relative flex items-center text-gray-700 font-medium hover:text-[#3c65f5] hover:underline hover:underline-offset-4 transition cursor-pointer focus:outline-none"
+              >
+                <span>Pages</span>
+                <ChevronDown size={16} className="ml-1 text-gray-400" />
+              </PopoverTrigger>
+
+              <PopoverContent
+                onMouseEnter={() => setPagesOpen(true)}
+                onMouseLeave={() => setPagesOpen(false)}
+                className="w-[180px] p-2"
+              >
+                {user?.userType === "recruiter" && (
+                  <Link
+                    href={ `/myjobposts`}
+                    className="block p-2 rounded hover:bg-gray-100 text-sm cursor-pointer"
+                  >
+                    My Job Posts
+                  </Link>
+                )}
+              </PopoverContent>
+            </Popover>
           </nav>
 
           {/* Buttons */}
@@ -210,33 +238,63 @@ const Header = () => {
               Candidates
             </Link>
             <div>
-  <button
-    className="flex justify-between items-center w-full text-left text-gray-700 py-2"
-    onClick={() => setIsBlogMobileOpen((prev) => !prev)}
-  >
-    <span>Blog</span>
-    {isBlogMobileOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-  </button>
+              <button
+                className="flex justify-between items-center w-full text-left text-gray-700 py-2"
+                onClick={() => setIsBlogMobileOpen((prev) => !prev)}
+              >
+                <span>Blog</span>
+                {isBlogMobileOpen ? (
+                  <ChevronUp size={16} />
+                ) : (
+                  <ChevronDown size={16} />
+                )}
+              </button>
 
-  {isBlogMobileOpen && (
-    <div className="ml-4 space-y-2">
-      <Link href="/blogs" className="block text-sm text-gray-600">
-        All Blogs
-      </Link>
+              {isBlogMobileOpen && (
+                <div className="ml-4 space-y-2">
+                  <Link href="/blogs" className="block text-sm text-gray-600">
+                    All Blogs
+                  </Link>
 
-      {user?.userType === "recruiter" && (
-        <Link href="/blogs/blogPost" className="block text-sm text-gray-600">
-          Blog Post
-        </Link>
-      )}
-    </div>
-  )}
-</div>
+                  {user?.userType === "recruiter" && (
+                    <Link
+                      href="/blogs/blogPost"
+                      className="block text-sm text-gray-600"
+                    >
+                      Blog Post
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
 
+            <div>
+              <button
+                className="flex justify-between items-center w-full text-left text-gray-700 py-2"
+                onClick={() => setIsPagesMobileOpen((prev) => !prev)}
+              >
+                <span>Pages</span>
+                {isPagesMobileOpen ? (
+                  <ChevronUp size={16} />
+                ) : (
+                  <ChevronDown size={16} />
+                )}
+              </button>
 
-            <Link href="#" className="block">
-              Pages
-            </Link>
+              {isPagesMobileOpen && (
+                <div className="ml-4 space-y-2">
+                  {user?.userType === "recruiter" && (
+                    <Link
+                      href={ `/myjobposts`}
+                      className="block text-sm text-gray-600"
+                    >
+                      My Job Posts
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
+
             <hr />
 
             {!user ? (
