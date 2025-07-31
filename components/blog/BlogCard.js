@@ -2,14 +2,16 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const BlogCard = ({title,writer, description, _id,  createdAt}) => {
+const BlogCard = ({title,writer, description, _id, imageUrl, createdAt}) => {
+  console.log("blog",imageUrl)
   return (
     <div className="  border border-gray-200 rounded-lg shadow-md flex flex-col items-center justify-between gap-2 p-3 hover:bg-[#f6f9ff] transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
       <Image
-        src={"/grp.jpg"}
+        // src={"/grp.jpg"}
+        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${imageUrl}`}
         alt="Blog Image"
         width={600}
-        height={600}
+        height={300}
         className="rounded-2xl w-full h-auto"
       />
       <Link

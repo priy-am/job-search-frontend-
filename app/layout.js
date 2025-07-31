@@ -3,6 +3,8 @@ import "./globals.css";
 import HeaderWrapper from "@/components/HeaderWrapper";
 import FooterWrapper from "@/components/FooterWrapper";
 import ReduxProvider from "@/components/ReduxProvider";
+import SessionMonitor from "@/components/SessionMonitor";
+import Loader from "@/components/Loader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,9 +28,12 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ReduxProvider>
-        <HeaderWrapper />
-        {children}
-        <FooterWrapper/>
+          {/* <SessionMonitor/> */}
+          <Loader>
+            <HeaderWrapper />
+            {children}
+            <FooterWrapper />
+          </Loader>
         </ReduxProvider>
       </body>
     </html>

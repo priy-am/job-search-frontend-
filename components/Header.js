@@ -15,7 +15,7 @@ import {
   fetchUserSuccess,
   logoutUser,
   fetchUserFailure,
-} from "@/redux/userSlice";
+} from "@/redux/slices/userSlice";
 import { useRouter } from "next/navigation";
 
 const Header = () => {
@@ -27,7 +27,7 @@ const Header = () => {
   const [isPagesMobileOpen, setIsPagesMobileOpen] = useState(false);
 
   const user = useSelector((state) => state.user.user);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -58,8 +58,8 @@ const Header = () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_AUTH_END_POINT}/logout`,
         {
-          method: "POST", // Usually logout should be POST
-          credentials: "include", // Include cookies for logout
+          method: "POST",
+          credentials: "include",
         }
       );
 
@@ -70,7 +70,7 @@ const Header = () => {
 
         // Refresh the page after successful logout
         setTimeout(() => {
-          router.push('/')
+          router.push("/");
           router.refresh();
         }, 1000); // Small delay to show the success message
       } else {
@@ -103,13 +103,6 @@ const Header = () => {
             <div className="group relative hover:underline-offset-4 transition hover:text-[#3c65f5] hover:underline">
               <Link href="/allJob">Find a Job</Link>
             </div>
-            <div className="group relative hover:underline-offset-4 transition hover:text-[#3c65f5] hover:underline">
-              <Link href="#">Recruiters</Link>
-            </div>
-            <div className="group relative hover:underline-offset-4 transition hover:text-[#3c65f5] hover:underline">
-              <Link href="#">Candidates</Link>
-            </div>
-
             <Popover open={blogOpen} onOpenChange={setBlogOpen}>
               <PopoverTrigger
                 onMouseEnter={() => setBlogOpen(true)}
@@ -143,31 +136,31 @@ const Header = () => {
               </PopoverContent>
             </Popover>
 
-            <Popover open={pagesOpen} onOpenChange={setPagesOpen}>
-              <PopoverTrigger
-                onMouseEnter={() => setPagesOpen(true)}
-                onMouseLeave={() => setPagesOpen(false)}
-                className="group relative flex items-center text-gray-700 font-medium hover:text-[#3c65f5] hover:underline hover:underline-offset-4 transition cursor-pointer focus:outline-none"
-              >
-                <span>Pages</span>
-                <ChevronDown size={16} className="ml-1 text-gray-400" />
-              </PopoverTrigger>
+            {user?.userType === "recruiter" && (
+              <Popover open={pagesOpen} onOpenChange={setPagesOpen}>
+                <PopoverTrigger
+                  onMouseEnter={() => setPagesOpen(true)}
+                  onMouseLeave={() => setPagesOpen(false)}
+                  className="group relative flex items-center text-gray-700 font-medium hover:text-[#3c65f5] hover:underline hover:underline-offset-4 transition cursor-pointer focus:outline-none"
+                >
+                  <span>Pages</span>
+                  <ChevronDown size={16} className="ml-1 text-gray-400" />
+                </PopoverTrigger>
 
-              <PopoverContent
-                onMouseEnter={() => setPagesOpen(true)}
-                onMouseLeave={() => setPagesOpen(false)}
-                className="w-[180px] p-2"
-              >
-                {user?.userType === "recruiter" && (
+                <PopoverContent
+                  onMouseEnter={() => setPagesOpen(true)}
+                  onMouseLeave={() => setPagesOpen(false)}
+                  className="w-[180px] p-2"
+                >
                   <Link
-                    href={ `/myjobposts`}
+                    href={`/myjobposts`}
                     className="block p-2 rounded hover:bg-gray-100 text-sm cursor-pointer"
                   >
                     My Job Posts
                   </Link>
-                )}
-              </PopoverContent>
-            </Popover>
+                </PopoverContent>
+              </Popover>
+            )}
           </nav>
 
           {/* Buttons */}
@@ -285,7 +278,7 @@ const Header = () => {
                 <div className="ml-4 space-y-2">
                   {user?.userType === "recruiter" && (
                     <Link
-                      href={ `/myjobposts`}
+                      href={`/myjobposts`}
                       className="block text-sm text-gray-600"
                     >
                       My Job Posts

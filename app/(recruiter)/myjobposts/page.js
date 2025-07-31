@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Home } from "lucide-react";
 import { useRouter } from "next/navigation";
+import SubHeading from "@/components/utlis/SubHeading";
 
 const MyJobPosts = () => {
   const [jobs, setJobs] = useState([]);
@@ -56,26 +57,7 @@ const MyJobPosts = () => {
   return (
     <>
       <div className="border-b pb-8">
-        <div className="w-full   bg-[#f0f5fc] mt-8 py-3 sm:py-5 md:py-10 relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            {/* Title & Subtext */}
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-[#05264e]">
-                My Job Posts
-              </h1>
-            </div>
-
-            {/* Breadcrumb */}
-            <div className="bg-white shadow-sm px-4 py-2 rounded-md flex items-center gap-1 text-sm text-[#6c757d]">
-              <Home size={16} className="text-[#6c757d]" />
-              <Link href="/" className="hover:underline text-[#6c757d]">
-                JobSearch
-              </Link>
-              <span className="mx-1">›</span>
-              <span className="text-[#3c65f5] font-medium">MyJobPosts</span>
-            </div>
-          </div>
-        </div>
+        <SubHeading Heading={"My Job Posts"}/>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-8 ">

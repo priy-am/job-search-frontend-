@@ -1,20 +1,14 @@
-"use client";
-import BrowseByCategory from "@/components/BrowseByCategory";
-import HeroSection from "@/components/HeroSection";
-import JobsOfDay from "@/components/JobsOfDay";
-import NewsAndBlogs from "@/components/NewsAndBlogs";
-import SubscribeSection from "@/components/SubscribeSection";
-import { useEffect } from "react";
+
+import BrowseByCategory from "@/components/home/BrowseByCategory";
+import ChatBot from "@/components/ChatBot";
+import HeroSection from "@/components/home/HeroSection";
+import JobsOfDay from "@/components/home/JobsOfDay";
+import NewsAndBlogs from "@/components/home/NewsAndBlogs";
+import SubscribeSection from "@/components/utlis/SubscribeSection";
+import PrettyLoader from "@/components/utlis/PreetyLoader";
+
 
 export default function Home() {
-  useEffect(() => {
-    setInterval(() => {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/refresh`, {
-        method: "GET",
-        credentials: "include",
-      });
-    }, 10 * 1000);
-  }, []);
 
   return (
     <div>
@@ -23,6 +17,8 @@ export default function Home() {
       <JobsOfDay />
       <NewsAndBlogs />
       <SubscribeSection />
+      <ChatBot/>
+      {/* <PrettyLoader/> */}
     </div>
   );
 }

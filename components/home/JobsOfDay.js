@@ -1,33 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import CategoryFilter from "./CategoryFilter";
-import JobCard from "./JobCard";
+import React, { useState } from "react";
+import CategoryFilter from "../CategoryFilter";
+import JobCard from "../JobCard";
+import { useSelector } from "react-redux";
+import useGetAllJobs from "@/hooks/useGetAllJobs";
 
 const JobsOfDay = () => {
-  const [jobData, setJobData] = useState([]);
+
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showAll, setShowAll] = useState(false);
-
-  useEffect(() => {
-    const fetchJobPosts = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_JOBPOST_END_POINT}/getAllJobPosts`
-        );
-        const data = await res.json();
-        setJobData(data?.jobPosts || []);
-      } catch (error) {
-        console.error("Error fetching job posts:", error);
-      }
-    };
-    fetchJobPosts();
-  }, []);
-
+useGetAllJobs();
+  const jobs = useSelector((state) => state.job.jobs);
   // Filter jobs if a category is selected
   const filteredJobs = selectedCategory
-    ? jobData.filter((job) => job.jobTitle === selectedCategory)
-    : jobData;
+    ? jobs.filter((job) => job.jobTitle === selectedCategory)
+    : jobs;
 
   const visibleJobs = showAll ? filteredJobs : filteredJobs.slice(0, 8);
 

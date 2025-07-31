@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import BackButton from "@/components/utlis/BackButton";
 
 const ApplicantDetailsPage = () => {
   const { id } = useParams();
@@ -31,6 +32,7 @@ const ApplicantDetailsPage = () => {
 
   return (
      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <BackButton/>
       <div className="max-w-5xl mx-auto bg-white border rounded-xl overflow-hidden">
         <div className="bg-blue-100 px-6 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-semibold text-gray-800">Application</h1>
