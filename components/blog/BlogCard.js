@@ -2,49 +2,60 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const BlogCard = ({title,writer, description, _id, imageUrl, createdAt}) => {
-  console.log("blog",imageUrl)
+const BlogCard = ({ title, writer, description, _id, imageUrl, createdAt }) => {
   return (
-    <div className="  border border-gray-200 rounded-lg shadow-md flex flex-col items-center justify-between gap-2 p-3 hover:bg-[#f6f9ff] transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
-      <Image
-        // src={"/grp.jpg"}
-        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${imageUrl}`}
-        alt="Blog Image"
-        width={600}
-        height={300}
-        className="rounded-2xl w-full h-auto"
-      />
+    <div
+      className="
+        w-full sm:w-[300px] md:w-[340px] lg:w-[360px]
+        h-[460px] md:h-[500px]
+        border border-gray-200 rounded-lg shadow-md
+        flex flex-col p-3 gap-2
+        bg-white
+        transition-all duration-300 hover:bg-[#f6f9ff] hover:-translate-y-1 hover:scale-[1.01]
+      "
+    >
+      {/* Image */}
+      <div className="relative w-full h-[160px] md:h-[180px]">
+        <Image
+          src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${imageUrl}`}
+          alt={title || "Blog Image"}
+          fill
+          className="rounded-2xl object-cover"
+          sizes="(max-width: 640px) 100vw, 360px"
+          priority={false}
+        />
+      </div>
+
+      {/* Title */}
       <Link
         href={`/blogs/${_id}`}
-        className={
-          "text-[#05264e] mt-3 hover:text-[#3c65f5] font-bold text-lg text-start "
-        }
+        className="text-[#05264e] hover:text-[#3c65f5] font-bold text-lg mt-1 line-clamp-2 min-w-0"
       >
-       {title}
+        {title}
       </Link>
 
-      <p className=" text-[#4f5e64] pb-4 text-start">
+      {/* Description */}
+      <p className="text-[#4f5e64] text-sm line-clamp-3 flex-grow min-w-0 max-h-1/4 ">
         {description}
       </p>
-      <div className="flex items-center justify-between w-full px-2 pb-5 text-sm text-[#6c757d]">
-        {/* Left Side - Avatar and Text */}
-        <div className="flex items-center justify-around  w-full  space-x-3">
-          <div className="w-8 h-8 relative rounded-full overflow-hidden">
-            <Image
-              src="/grp.jpg"
-              alt="Author Avatar"
-              fill
-              className="object-cover cursor-pointer"
-            />
+
+      {/* Footer */}
+      <div className="flex items-center justify-between pt-2 ">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0">
+            <Image src="/grp.jpg" alt="Author Avatar" fill className="object-cover" />
           </div>
-          <div className="flex flex-col justify-center items-center">
-            <span className="text-[#05264e] font-semibold">{writer || "Anonymous"}</span>
-            <span className="text-xs text-[#6c757d]">{new Date(createdAt).toLocaleDateString()}</span>
+          <div className="flex flex-col min-w-0">
+            <span className="text-[#05264e] font-semibold truncate">
+              {writer || "Anonymous"}
+            </span>
+            <span className="text-xs text-[#6c757d]">
+              {new Date(createdAt).toLocaleDateString()}
+            </span>
           </div>
         </div>
 
-        {/* Right Side - Reading Time */}
-        <div className="text-xs text-[#6c757d]">2 mins to read</div>
+        <div className="text-xs text-[#6c757d] shrink-0">2 mins read</div>
       </div>
     </div>
   );

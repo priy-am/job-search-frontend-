@@ -11,6 +11,7 @@ import SubHeading from "@/components/utlis/SubHeading";
 import ImageUploadInput from "@/components/utlis/inputFeild/ImageUploadInput";
 import TextInput from "@/components/utlis/inputFeild/TextInput";
 
+
 const BlogEditor = dynamic(() => import("@/components/blog/BlogEditor"), {
   ssr: false,
 });
@@ -23,6 +24,7 @@ const CreateBlog = () => {
   } = useForm();
   const [content, setContent] = useState("");
   const user = useSelector((state) => state.user.user);
+
 
   const onSubmit = async (formData) => {
     const title = formData.title.trim();
@@ -54,6 +56,7 @@ const CreateBlog = () => {
 
       if (res.ok) {
         toast.success("✅ Blog posted successfully!");
+        router.push("/blogs");
       } else {
         toast.error("Something went wrong. Please try again.");
       }
