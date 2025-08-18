@@ -3,7 +3,6 @@ import "./globals.css";
 import HeaderWrapper from "@/components/HeaderWrapper";
 import FooterWrapper from "@/components/FooterWrapper";
 import ReduxProvider from "@/components/ReduxProvider";
-import SessionMonitor from "@/components/SessionMonitor";
 import Loader from "@/components/Loader";
 
 const geistSans = Geist({
