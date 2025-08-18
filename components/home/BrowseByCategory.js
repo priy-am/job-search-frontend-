@@ -42,7 +42,7 @@ const BrowseByCategory = () => {
             Browse by category
           </h3>
           <p className="text-[#4f5e64] text-base sm:text-lg max-w-2xl mx-auto">
-            Find the job that's perfect for you. about {jobsCount} new jobs everyday
+            Find the job that&aposs perfect for you. about {jobsCount} new jobs everyday
           </p>
         </div>
 
