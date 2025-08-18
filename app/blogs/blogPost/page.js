@@ -7,8 +7,12 @@ import { useState } from "react";
 import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SubHeading from "@/components/utlis/SubHeading";
+import ImageUploadInput from "@/components/utlis/inputFeild/ImageUploadInput";
+import TextInput from "@/components/utlis/inputFeild/TextInput";
 
-const BlogEditor = dynamic(() => import("@/components/BlogEditor"), {
+
+const BlogEditor = dynamic(() => import("@/components/blog/BlogEditor"), {
   ssr: false,
 });
 
@@ -18,17 +22,9 @@ const CreateBlog = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const [imagePreview, setImagePreview] = useState(null);
   const [content, setContent] = useState("");
   const user = useSelector((state) => state.user.user);
 
-  const handleImagePreview = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
 
   const onSubmit = async (formData) => {
     const title = formData.title.trim();
@@ -50,13 +46,17 @@ const CreateBlog = () => {
     finalForm.append("image", formData.image[0]);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/blogs/createBlog`, {
-        method: "POST",
-        body: finalForm,
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/blogs/createBlog`,
+        {
+          method: "POST",
+          body: finalForm,
+        }
+      );
 
       if (res.ok) {
         toast.success("✅ Blog posted successfully!");
+        router.push("/blogs");
       } else {
         toast.error("Something went wrong. Please try again.");
       }
@@ -69,80 +69,59 @@ const CreateBlog = () => {
   return (
     <>
       <ToastContainer />
+      <SubHeading Heading={"Write Your Blog"} />
       <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6 my-12 bg-white shadow-md rounded-md mt-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-center text-blue-700">Write Your Blog ✍️</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-center text-blue-700">
+          Write Your Blog ✍️
+        </h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div>
-            <label className="block font-semibold mb-1">Blog Title</label>
-            <input
-              type="text"
-              {...register("title", {
-                required: "Title is required",
-                minLength: { value: 5, message: "Min 5 characters" },
-                maxLength: { value: 100, message: "Max 100 characters" },
-                validate: (v) => v.trim().length > 0 || "No empty spaces"
-              })}
-              className="w-full border border-gray-300 p-2 rounded focus:outline-blue-400"
-            />
-            {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
-          </div>
+          <TextInput
+            label="Blog Title"
+            name="title"
+            register={register}
+            errors={errors}
+            minLength={5}
+            maxLength={100}
+            placeholder="Enter blog title"
+          />
 
           <div>
-            <label className="block font-semibold mb-1">Short Description</label>
+            <label className="block font-semibold mb-1">
+              Short Description
+            </label>
             <textarea
               rows={3}
               {...register("description", {
                 required: "Description is required",
                 minLength: { value: 10, message: "Min 10 characters" },
                 maxLength: { value: 300, message: "Max 300 characters" },
-                validate: (v) => v.trim().length > 0 || "No empty spaces"
+                validate: (v) => v.trim().length > 0 || "No empty spaces",
               })}
               className="w-full border border-gray-300 p-2 rounded focus:outline-blue-400"
             />
-            {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+            {errors.description && (
+              <p className="text-red-500 text-sm">
+                {errors.description.message}
+              </p>
+            )}
           </div>
 
           <div>
-            <label className="block font-semibold mb-1">Blog Content <span className="text-red-500">*</span></label>
+            <label className="block font-semibold mb-1">
+              Blog Content <span className="text-red-500">*</span>
+            </label>
             <div className="border border-gray-300 rounded p-2 bg-white">
               <BlogEditor content={content} setContent={setContent} />
             </div>
           </div>
 
-          <div>
-            <label className="block font-semibold mb-1">Upload Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              {...register("image", { required: "Image is required",
-                validate: {
-                      acceptedFormats: (fileList) => {
-                        const file = fileList?.[0];
-                        if (!file) return "Image is required";
-                        const MAX_SIZE = 16000000; // 10mb
-                        if (file.size > MAX_SIZE) {
-                          return "Image size must be less than 10 mb";
-                        }
-
-                        return true;
-                      },
-                    },
-               })}
-              onChange={handleImagePreview}
-              className="block w-full"
-            />
-            {imagePreview && (
-              <Image
-                src={imagePreview}
-                alt="Blog Preview"
-                width={100}
-                height={50}
-                className="rounded mt-3"
-              />
-            )}
-            {errors.image && <p className="text-red-500 text-sm">{errors.image.message}</p>}
-          </div>
+          <ImageUploadInput
+            label="Upload Image"
+            name="image"
+            register={register}
+            errors={errors}
+          />
 
           <div>
             <label className="block font-semibold mb-1">#Tags (Optional)</label>

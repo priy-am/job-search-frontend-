@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import SearchBar from "./SearchBar";
+import SearchBar from "../utlis/SearchBar";
 
 const HeroSection = () => {
   return (
@@ -21,7 +21,7 @@ const HeroSection = () => {
       
        <div className="right hidden  w-full lg:w-1/2 md:flex items-center justify-center  min-h-[40vh] lg:min-h-[80vh] p-4 lg:p-8 overflow-hidden">
         <div className="relative w-full max-w-md mx-auto h-full flex items-center justify-center">
-          {/* Main Image Container - Positioned to allow overlap without overflow */}
+
           <div className="relative w-72 h-80 lg:w-80 lg:h-96">
             {/* Top Image with blue bor der styling */}
             <div className="absolute top-0 right-11  w-56 h-64 lg:w-[400px] lg:h-72 border-l-6 border-b-6 border-[#3c65f5] rounded-tl-3xl rounded-r-3xl overflow-hidden shadow-lg z-20">

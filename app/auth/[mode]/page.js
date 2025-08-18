@@ -47,7 +47,11 @@ export default function AuthPage() {
         return toast.error(result.message || `Failed to ${isRegister ? "register" : "login"}`);
       }
       toast.success(result.message)
-      router.push("/");
+      if (isRegister) {
+      router.push("/auth/login"); // redirect to login after register
+    } else {
+      router.push("/"); // redirect to homepage after login
+    }
 
     } catch (error) {
       console.error("Error during submission:", error);

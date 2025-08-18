@@ -6,7 +6,7 @@ import {
   fetchCategoriesFailure,
   fetchCategoriesStart,
   fetchCategoriesSuccess,
-} from '@/redux/categorySlice'
+} from '@/redux/slices/categorySlice'
 
 export default function useGetAllCategories() {
   const dispatch = useDispatch()

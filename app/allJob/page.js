@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/utlis/SearchBar";
 import JobCard from "@/components/JobCard";
 import { useSearchParams } from "next/navigation";
-import SubscribeSection from "@/components/SubscribeSection";
+import SubscribeSection from "@/components/utlis/SubscribeSection";
+import SubHeading from "@/components/utlis/SubHeading";
 
 const AllJobsPage = () => {
   const [jobs, setJobs] = useState([]);
@@ -33,6 +34,7 @@ const AllJobsPage = () => {
 
   return (
     <>
+    <SubHeading Heading={"All Jobs"}/>
       <section className="px-4 pt-6 w-full">
         <div className="max-w-7xl mb-3 bg-[#f5f8fc] rounded-4xl py-10 sm:py-14 md:py-20 mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">

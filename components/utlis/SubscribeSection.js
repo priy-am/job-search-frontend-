@@ -2,16 +2,18 @@
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 
+
 const SubscribeSection = () => {
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors,isSubmitting },
     reset,
+    
   } = useForm();
 
   const onSubmit = async(data) => {
-    console.log("Subscribed Email:", data.email);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/subscribe`,{
         method: "POST",
@@ -29,8 +31,9 @@ const SubscribeSection = () => {
     } catch (error) {
       console.log("Subscribed Error:- ", error)
       toast("server error")
-    }
-    reset(); 
+    } finally {
+      reset();
+    } 
   };
 
   return (
@@ -70,7 +73,8 @@ const SubscribeSection = () => {
 
           <button
             type="submit"
-            className="bg-[#3566f6] text-white px-6 py-3 text-sm font-medium rounded-md hover:bg-blue-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+            disabled={isSubmitting}
+            className={` ${isSubmitting? "bg-[#85a2fa] pointer-events-none cursor-not-allowed": "bg-[#3566f6]"} text-white px-6 py-3 text-sm font-medium rounded-md hover:bg-blue-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105`}
           >
             Subscribe
           </button>

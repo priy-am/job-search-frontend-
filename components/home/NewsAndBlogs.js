@@ -7,7 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import BlogCard from "./BlogCard";
+import BlogCard from "../blog/BlogCard";
 import { useState, useEffect } from "react";
 
 const NewsAndBlogs = () => {

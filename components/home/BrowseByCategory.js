@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import BrowseCard from "./BrowseCard";
+import BrowseCard from "../BrowseCard";
 import {
   Carousel,
   CarouselContent,
@@ -8,9 +8,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useSelector } from "react-redux";
+import useGetAllJobs from "@/hooks/useGetAllJobs";
 
 const BrowseByCategory = () => {
   const [categories, setCategories] = useState([]);
+  useGetAllJobs();
+  const jobs = useSelector((state) => state.job.jobs);
+    const jobsCount = jobs.length > 999 ? "999++" : `${jobs.length}`;
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -18,7 +23,7 @@ const BrowseByCategory = () => {
           `${process.env.NEXT_PUBLIC_JOBPOST_END_POINT}/getJobPosts`
         );
         const data = await  res.json();
-        console.log("Response from API:", data?.grouped?.[0]?.image);
+        console.log("Response from API:", data?.grouped);
         await setCategories(data?.grouped || []);
         console.log("Categories fetched:", categories);
       } catch (error) {
@@ -37,7 +42,7 @@ const BrowseByCategory = () => {
             Browse by category
           </h3>
           <p className="text-[#4f5e64] text-base sm:text-lg max-w-2xl mx-auto">
-            Find the job that's perfect for you. about 800+ new jobs everyday
+            Find the job that's perfect for you. about {jobsCount} new jobs everyday
           </p>
         </div>
 

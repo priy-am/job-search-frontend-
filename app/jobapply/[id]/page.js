@@ -15,10 +15,12 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import SubHeading from "@/components/utlis/SubHeading";
+import BackButton from "@/components/utlis/BackButton";
 
 export default function ApplyJobPage() {
   const { id } = useParams(); // job ID from the route
-  const router = useRouter()
+  const router = useRouter();
 
   const {
     register,
@@ -73,19 +75,21 @@ export default function ApplyJobPage() {
     formdata.append("jobId", id);
     formdata.append("resume", data.resume[0]);
 
-    console.log(data.resume[0]);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/submit`, {
-        method: "POST",
-        // Remove Content-Type header - let browser set it automatically for FormData
-        credentials: "include",
-        body: formdata, // Send FormData instead of JSON
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/submit`,
+        {
+          method: "POST",
+          // Remove Content-Type header - let browser set it automatically for FormData
+          credentials: "include",
+          body: formdata,
+        }
+      );
 
       if (res.ok) {
         setSubmitted(true);
         toast.success("✅ Your application has been submitted!");
-        router.push("/")
+        router.push("/");
       } else {
         toast.error("❌ Failed to submit application. Please try again.");
       }
@@ -99,6 +103,16 @@ export default function ApplyJobPage() {
   return (
     <>
       <ToastContainer />
+
+      <div className="mt-5 ml-3">
+        <BackButton />
+      </div>
+
+      <SubHeading
+        Heading={`${jobDetails?.jobTitle || "Job Position"}`}
+        bio={jobDetails?.description}
+      />
+
       <div className="max-w-2xl mx-auto my-10  px-4">
         {loading ? (
           <div className="text-center">
@@ -139,110 +153,117 @@ export default function ApplyJobPage() {
               className="space-y-5 bg-white shadow-sm border border-gray-100 p-6 rounded-lg"
             >
               {/* Full Name */}
-              <div className="space-y-2">
-                <Label htmlFor="fullName" className="text-[#05264e]">
-                  Full Name
-                </Label>
-                <Input
-                  id="fullName"
-                  placeholder="John Doe"
-                  {...register("fullName", {
-                    required: "Full name is required",
-                    validate: (value) => {
-                      const trimmed = value.trim();
-                      if (trimmed.length < 3) {
-                        return "Full name must be at least 3 characters";
-                      }
-                      if (trimmed.length > 50) {
-                        return "Full name must be less than 50 characters";
-                      }
-                      return true;
-                    },
-                  })}
-                />
-                {errors.fullName && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.fullName.message}
-                  </p>
-                )}
+              <div className="flex flex-col md:flex-row gap-3">
+                <div className="space-y-2 w-1/2">
+                  <Label htmlFor="fullName" className="text-[#05264e]">
+                    Full Name
+                  </Label>
+                  <Input
+                    id="fullName"
+                    placeholder="John Doe"
+                    {...register("fullName", {
+                      required: "Full name is required",
+                      validate: (value) => {
+                        const trimmed = value.trim();
+                        if (trimmed.length < 3) {
+                          return "Full name must be at least 3 characters";
+                        }
+                        if (trimmed.length > 50) {
+                          return "Full name must be less than 50 characters";
+                        }
+                        return true;
+                      },
+                    })}
+                  />
+                  {errors.fullName && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.fullName.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Mobile Number */}
+                <div className="space-y-2 w-1/2">
+                  <Label htmlFor="mobile" className="text-[#05264e]">
+                    Mobile Number
+                  </Label>
+                  <Input
+                    id="mobile"
+                    type="tel"
+                    placeholder="e.g. 9876543210"
+                    {...register("mobile", {
+                      required: "Mobile number is required",
+                      pattern: {
+                        value: /^[6-9]\d{9}$/,
+                        message: "Enter a valid 10-digit mobile number",
+                      },
+                      validate: (value) => {
+                        if (value.length !== 10) {
+                          return "Mobile number must be exactly 10 digits";
+                        }
+                        return true;
+                      },
+                    })}
+                  />
+                  {errors.mobile && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.mobile.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
-              {/* Mobile Number */}
-              <div className="space-y-2">
-                <Label htmlFor="mobile" className="text-[#05264e]">
-                  Mobile Number
-                </Label>
-                <Input
-                  id="mobile"
-                  type="tel"
-                  placeholder="e.g. 9876543210"
-                  {...register("mobile", {
-                    required: "Mobile number is required",
-                    pattern: {
-                      value: /^[6-9]\d{9}$/,
-                      message: "Enter a valid 10-digit mobile number",
-                    },
-                    validate: (value) => {
-                      if (value.length !== 10) {
-                        return "Mobile number must be exactly 10 digits";
-                      }
-                      return true;
-                    },
-                  })}
-                />
-                {errors.mobile && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.mobile.message}
-                  </p>
-                )}
-              </div>
+              <div className="flex flex-col md:flex-row gap-3">
+                {/* Email */}
+                <div className="space-y-2 w-1/2">
+                  <Label htmlFor="email" className="text-[#05264e]">
+                    Email
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="john@example.com"
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value:
+                          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        message: "Enter a valid email address",
+                      },
+                    })}
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
 
-              {/* Email */}
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-[#05264e]">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                      message: "Enter a valid email address",
-                    },
-                  })}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Experience */}
-              <div className="space-y-2">
-                <Label className="text-[#05264e]">Experience (in years)</Label>
-                <Select
-                  onValueChange={(value) => setValue("experience", value)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select experience" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Array.from({ length: 51 }, (_, i) => (
-                      <SelectItem key={i} value={String(i)}>
-                        {i} {i === 1 ? "year" : "years"}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.experience && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.experience.message}
-                  </p>
-                )}
+                {/* Experience */}
+                <div className="space-y-2 w-1/2">
+                  <Label className="text-[#05264e]">
+                    Experience (in years)
+                  </Label>
+                  <Select
+                    onValueChange={(value) => setValue("experience", value)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select experience" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Array.from({ length: 51 }, (_, i) => (
+                        <SelectItem key={i} value={String(i)}>
+                          {i} {i === 1 ? "year" : "years"}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.experience && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.experience.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-2">
