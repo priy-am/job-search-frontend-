@@ -47,6 +47,9 @@ export default function AuthPage() {
         return toast.error(result.message || `Failed to ${isRegister ? "register" : "login"}`);
       }
       toast.success(result.message)
+      if(isRegister === "login"){
+        localStorage.setItem("token", result.token);
+      }
       if (isRegister) {
       router.push("/auth/login"); // redirect to login after register
     } else {
