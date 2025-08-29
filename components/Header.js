@@ -37,7 +37,10 @@ const Header = () => {
           `${process.env.NEXT_PUBLIC_AUTH_END_POINT}/me`,
           {
             method: "GET",
-            credentials: "include",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            // credentials: "include",
           }
         );
         if (res.ok) {
